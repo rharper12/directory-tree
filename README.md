@@ -1,36 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Directory Tree Management System
 
-## Getting Started
+## Overview
 
-First, run the development server:
+This project implements a directory tree management system with a command-line style interface. Users can create, move, delete, and list directories in a hierarchical structure through a web interface. The system maintains directory structures with case-insensitive naming to prevent conflicts and supports full path operations for nested directories.
+
+**NOTE**: This project does **NOT** create folders on the host machine and is intended to demonstrate my coding ability as an interview candidate.
+
+## Features
+
+- Create directories with nested paths
+- Move directories and their contents
+- Delete directories recursively
+- List the entire directory structure
+- Case-insensitive directory names to prevent conflicts
+
+## Prerequisites
+
+- Node.js (v18 or higher)
+- npm (included with Node.js)
+
+## Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/[your-username]/directory-tree.git
+cd directory-tree
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+## Running the Application
+
+1. Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Open your browser and navigate to http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Using the Application
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Enter commands in the input field using the following format:
 
-## Learn More
+- CREATE path/to/directory
+- MOVE source/path destination/path
+- DELETE path/to/directory
+- LIST
 
-To learn more about Next.js, take a look at the following resources:
+Examples:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+CREATE movies/action
+MOVE movies/action films/action
+DELETE films/action
+LIST
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Running Tests
 
-## Deploy on Vercel
+Run the test suite:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm test
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Watch mode for development:
+
+```bash
+npm run test:watch
+```
+
+## Development Tools
+
+- Next.js framework
+- Jest and React Testing Library for testing
+- ESLint for code linting
+- Prettier for code formatting
+- Husky for git hooks
+- lint-staged for pre-commit checks
+- Tailwind CSS for styling
+
+## Tech Stack
+
+- Next.js 15.1.2
+- React 19
+- TypeScript
+- Tailwind CSS
+
+**NOTE** All code changes will be automatically formatted and tested before committing to repo.
