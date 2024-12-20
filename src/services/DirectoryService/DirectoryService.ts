@@ -120,7 +120,7 @@ export class DirectoryService {
     const sourceSegments = this.parsePath(sourcePath);
     const destSegments = this.parsePath(destPath);
 
-    if (sourceSegments.length === 0 || destSegments.length === 0) {
+    if (sourceSegments.length === 0) {
       return { success: false, error: ERROR_MESSAGES.INVALID_PATH };
     }
 
@@ -129,20 +129,20 @@ export class DirectoryService {
       return { success: false, error: ERROR_MESSAGES.CANNOT_MOVE };
     }
 
-    const { node: destNode } = this.findNode(destSegments);
+    const destNode = destSegments.length === 0 ? this.root : this.findNode(destSegments).node;
     if (!destNode) {
       return { success: false, error: ERROR_MESSAGES.CANNOT_MOVE };
     }
 
     if (
       sourcePath.toLowerCase() === destPath.toLowerCase() ||
-      destPath.toLowerCase().startsWith(sourcePath.toLowerCase() + '/')
+      (destPath && destPath.toLowerCase().startsWith(sourcePath.toLowerCase() + '/'))
     ) {
       return { success: false, error: ERROR_MESSAGES.CANNOT_MOVE };
     }
 
     const sourceName = sourceSegments[sourceSegments.length - 1];
-    if (this.hasChildIgnoreCase(destNode, sourceName)) {
+    if (destNode !== this.root && this.hasChildIgnoreCase(destNode, sourceName)) {
       return { success: false, error: ERROR_MESSAGES.DIRECTORY_EXISTS };
     }
 

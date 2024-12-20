@@ -1,7 +1,13 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import { HTTP_STATUS } from '@/utils/constants/httpStatus';
+import { ERROR_MESSAGES } from '@/utils/constants/errorMessages';
+import { DirectoryResponse } from '@/types/directory';
 
+/**
+ * DirectoryManager provides a command-line interface for managing directories
+ */
 export default function DirectoryManager() {
   const [command, setCommand] = useState('');
   const [output, setOutput] = useState('');
@@ -16,9 +22,10 @@ export default function DirectoryManager() {
 
   const formatOutput = (command: string, response: string): string => {
     const parts = command.split(' ');
-    const formattedCommand = `> ${parts[0].toUpperCase()}${parts.length > 1 ? ' ' + parts.slice(1).join(' ') : ''}`;
-
-    const spacing = output ? '\n\n' : '';
+    const formattedCommand = `> ${parts[0].toUpperCase()}${
+      parts.length > 1 ? ' ' + parts.slice(1).join(' ') : ''
+    }`;
+    const spacing = output ? '\n' : '';
 
     if (parts[0].toUpperCase() === 'LIST') {
       return `${spacing}${formattedCommand}${response}`;
@@ -37,26 +44,74 @@ export default function DirectoryManager() {
 
     try {
       const [cmd, ...args] = command.trim().split(' ');
+      const upperCmd = cmd.toUpperCase();
+      let response: Response;
 
-      const response = await fetch('/api/v1/directory', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          command: cmd,
-          path: args[0],
-          destPath: args[1],
-        }),
-      });
+      switch (upperCmd) {
+        case 'LIST':
+          response = await fetch('/api/v1/directory');
+          break;
 
-      const data = await response.json();
+        case 'CREATE':
+          if (!args[0]) {
+            setError(ERROR_MESSAGES.INVALID_PATH);
+            return;
+          }
+          response = await fetch('/api/v1/directory', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              path: args[0],
+            }),
+          });
+          break;
+
+        case 'MOVE':
+          if (!args[0] || !args[1]) {
+            setError(ERROR_MESSAGES.MISSING_PATHS);
+            return;
+          }
+          response = await fetch('/api/v1/directory', {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              path: args[0],
+              destPath: args[1],
+            }),
+          });
+          break;
+
+        case 'DELETE':
+          if (!args[0]) {
+            setError(ERROR_MESSAGES.INVALID_PATH);
+            return;
+          }
+          response = await fetch(`/api/v1/directory?path=${encodeURIComponent(args[0])}`, {
+            method: 'DELETE',
+          });
+          break;
+
+        default:
+          setError(ERROR_MESSAGES.INVALID_COMMAND);
+          return;
+      }
+
+      const data: DirectoryResponse = await response.json();
 
       if (!response.ok) {
-        setError(data.error);
-        // Only add error message to output if it's a specific error message
-        if (data.error && data.error.startsWith('Cannot delete')) {
-          setOutput((prev) => prev + formatOutput(command, data.error));
+        const errorMessage = data.error || ERROR_MESSAGES.FAILED_CREATE;
+        setError(errorMessage);
+
+        // Display error in output for client errors (4xx)
+        if (
+          response.status >= HTTP_STATUS.BAD_REQUEST &&
+          response.status < HTTP_STATUS.SERVER_ERROR
+        ) {
+          setOutput((prev) => prev + formatOutput(command, errorMessage));
         }
         return;
       }
@@ -66,7 +121,7 @@ export default function DirectoryManager() {
       );
     } catch (err) {
       console.error('Command processing error:', err);
-      setError('An error occurred processing your command');
+      setError(ERROR_MESSAGES.PROCESSING_ERROR);
     }
 
     setCommand('');

@@ -1,7 +1,15 @@
 export const ERROR_MESSAGES = {
-    DIRECTORY_EXISTS: 'Directory already exists',
-    DIRECTORY_NOT_FOUND: 'Directory does not exist',
-    INVALID_PATH: 'Invalid path provided',
-    CANNOT_MOVE: 'Cannot move directory - path does not exist',
-    CANNOT_DELETE: 'Cannot delete directory - path does not exist'
+  DIRECTORY_EXISTS: 'Directory already exists',
+  DIRECTORY_NOT_FOUND: 'Directory does not exist',
+  INVALID_PATH: 'Path is required',
+  CANNOT_MOVE: 'Cannot move directory - path does not exist',
+  CANNOT_DELETE: 'Cannot delete directory - path does not exist',
+  INVALID_COMMAND: 'Invalid command',
+  MISSING_PATHS: 'Both path and destination path are required',
+  INVALID_REQUEST: 'Invalid JSON format',
+  FAILED_CREATE: 'Failed to create directory',
+  FAILED_UPDATE: 'Failed to update directory',
+  FAILED_DELETE: 'Failed to remove directory',
+  FAILED_RETRIEVE: 'Failed to retrieve directories',
+  PROCESSING_ERROR: 'An error occurred processing your command',
 } as const;
