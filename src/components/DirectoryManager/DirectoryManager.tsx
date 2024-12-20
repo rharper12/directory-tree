@@ -1,11 +1,18 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 export default function DirectoryManager() {
   const [command, setCommand] = useState('');
   const [output, setOutput] = useState('');
   const [error, setError] = useState('');
+  const outputRef = useRef<HTMLPreElement>(null);
+
+  useEffect(() => {
+    if (outputRef.current) {
+      outputRef.current.scrollTop = outputRef.current.scrollHeight;
+    }
+  }, [output]);
 
   const formatOutput = (command: string, response: string): string => {
     const parts = command.split(' ');
@@ -82,10 +89,11 @@ export default function DirectoryManager() {
         {error && <p className="text-red-400 text-sm">{error}</p>}
       </form>
       <pre
+        ref={outputRef}
         className="flex-1 bg-black/20 p-4 rounded-lg
                      text-white font-mono whitespace-pre-wrap
                      border border-white/10
-                     overflow-y-auto"
+                     overflow-y-auto scroll-smooth"
       >
         {output || 'Output will appear here...'}
       </pre>
