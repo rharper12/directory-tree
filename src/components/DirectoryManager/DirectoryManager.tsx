@@ -56,7 +56,7 @@ export default function DirectoryManager() {
         setError(data.error);
         // Only add error message to output if it's a specific error message
         if (data.error && data.error.startsWith('Cannot delete')) {
-          setOutput((prev) => prev + formatOutput(command, '\n' + data.error));
+          setOutput((prev) => prev + formatOutput(command, data.error));
         }
         return;
       }
