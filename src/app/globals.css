@@ -3,14 +3,14 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
   --foreground: #171717;
+  --background: linear-gradient(135deg, #e0f4ff 0%, #f0f9ff 50%, #e6f7f2 100%);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
     --foreground: #ededed;
+    --background: linear-gradient(135deg, #1a2b3c 0%, #1e293b 50%, #1a2b38 100%);
   }
 }
 
@@ -18,4 +18,5 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
 }

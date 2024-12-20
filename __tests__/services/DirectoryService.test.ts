@@ -1,4 +1,3 @@
-// src/services/DirectoryService/DirectoryService.test.ts
 import {DirectoryService} from "@/services/DirectoryService/DirectoryService";
 
 describe('DirectoryService', () => {
